@@ -1,0 +1,7 @@
+{
+  "name": "CFEngine 3 - Apache",
+  "description": "CFEngine Build project to install and configure Apache 2",
+  "type": "policy-set",
+  "git": true,
+  "build": []
+}
