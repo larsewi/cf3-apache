@@ -9,7 +9,7 @@ bundle agent apache_server_setup
 bundle agent apache_server_dependencies
 {
  packages:
-   debian::
+   debian|ubuntu::
      "apache2"
        policy => "present",
        package_module => apt_get,
