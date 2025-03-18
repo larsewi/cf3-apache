@@ -1,0 +1,17 @@
+bundle agent apache_server_setup
+{
+  methods:
+    data:apache_server::
+      "apache_server_dependencies"
+        comment => "Install Apache 2 dependencies";
+}
+
+bundle agent apache_server_dependencies
+{
+ packages:
+   debian::
+     "apache2"
+       policy => "present",
+       package_module => apt_get,
+       comment => "Install Apache 2 from apt repository";
+}

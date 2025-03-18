@@ -17,6 +17,17 @@
         "run EXPLICIT_VERSION=3.26.0 EXPLICIT_RELEASE=1 ./prepare.sh -y",
         "copy ./ ./"
       ]
+    },
+    {
+      "name": "./apache_server_setup.cf",
+      "description": "Local policy file added using cfbs command line",
+      "tags": ["local"],
+      "added_by": "cfbs add",
+      "steps": [
+        "copy ./apache_server_setup.cf services/cfbs/apache_server_setup.cf",
+        "policy_files services/cfbs/apache_server_setup.cf",
+        "bundles apache_server_setup"
+      ]
     }
   ]
 }
