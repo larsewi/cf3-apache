@@ -28,6 +28,15 @@
         "policy_files services/cfbs/apache_server_setup.cf",
         "bundles apache_server_setup"
       ]
+    },
+    {
+      "name": "./www/",
+      "description": "Local policy file added using cfbs command line",
+      "tags": ["local"],
+      "added_by": "cfbs add",
+      "steps": [
+        "copy ./ ./templates/www/"
+      ]
     }
   ]
 }
