@@ -30,13 +30,6 @@
       ]
     },
     {
-      "name": "./www/html/",
-      "description": "Local policy file added using cfbs command line",
-      "tags": ["local"],
-      "added_by": "cfbs add",
-      "steps": ["copy ./ ./templates/www/html"]
-    },
-    {
       "name": "every-minute",
       "description": "Makes policy fetching, evaluation, and reporting happen every minute.",
       "tags": ["management", "experimental"],

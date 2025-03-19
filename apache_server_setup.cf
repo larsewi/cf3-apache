@@ -1,3 +1,11 @@
+bundle common apache_server
+{
+  vars:
+    "template_dir"
+      string => "/var/www/templates",
+      comment => "Directory of templates to render source files";
+}
+
 bundle agent apache_server_setup
 {
   methods:
@@ -24,32 +32,27 @@ bundle agent apache_server_dependencies
 
 bundle agent apache_server_fetch_sources
 {
-  vars:
-    "source_dir"
-      string => "$(sys.inputdir)/templates/www";
-    "source_files"
-      slist => findfiles("$(source_dir)/**/*.{html,css}");
-
-  files:
-    "$(source_dir)/."
-      copy_from => remote_dcp("$(sys.masterdir)/templates/www/", "$(sys.policy_hub)"),
-      depth_search => recurse("inf");
+  git:
+    "web_sources"
+      repository => "https://github.com/larsewi/cf3-website.git",
+      destination => "$(apache_server.template_dir)",
+      version => ifelse("data:prod_host", "production", "master"),
+      update => "true",
+      force => "true";
 }
 
 bundle agent apache_server_render_sources
 {
   vars:
-    "source_dir"
-      string => "$(sys.inputdir)/templates/www";
-    "source_files"
-      slist => findfiles("$(source_dir)/**/*.{html,css}");
+    "template_files"
+      slist => findfiles("$(apache_server.template_dir)/src/**/*.{html,css}");
 
   files:
-    "/var/www/$(with)"
+    "/var/www/html/$(with)"
       template_method => "cfengine",
-      edit_template => "$(source_files)",
-      with => string_replace("$(source_files)", "$(source_dir)/", ""),
-      comment => "Render source files into /var/www/",
+      edit_template => "$(template_files)",
+      with => string_replace("$(template_files)", "$(apache_server.template_dir)/src/", ""),
+      comment => "Render source files from /var/www/template/ into /var/www/html/",
       perms => m(644);
 }
 
