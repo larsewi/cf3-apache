@@ -4,6 +4,10 @@ bundle agent apache_server_setup
     data:apache_server::
       "apache_server_dependencies"
         comment => "Install Apache 2 dependencies";
+      "apache_server_render_sources"
+        comment => "Render website sources into /var/www/html/";
+      "apache_server_perms"
+        comment => "Set permissions on directories";
 }
 
 bundle agent apache_server_dependencies
@@ -14,4 +18,36 @@ bundle agent apache_server_dependencies
        policy => "present",
        package_module => apt_get,
        comment => "Install Apache 2 from apt repository";
+}
+
+bundle agent apache_server_render_sources
+{
+  vars:
+    "source_dir"
+      string => "$(sys.inputdir)/templates/www";
+    "source_files"
+      slist => findfiles("$(source_dir)/**/*.{html,css}");
+
+  files:
+    "$(source_dir)/."
+      copy_from => remote_dcp("$(sys.masterdir)/templates/www/", "$(sys.policy_hub)"),
+      depth_search => recurse("inf");
+
+
+    "/var/www/$(with)"
+      template_method => "cfengine",
+      edit_template => "$(source_files)",
+      with => string_replace("$(source_files)", "$(source_dir)/", ""),
+      comment => "Render source files into /var/www/",
+      perms => m(644);
+}
+
+bundle agent apache_server_perms
+{
+  files:
+    "/var/www/html/."
+      perms => m(755);
+
+    "/var/www/html/css/."
+      perms => m(755);
 }
