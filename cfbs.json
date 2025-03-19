@@ -74,6 +74,34 @@
       "steps": [
         "copy ./upgrade_all_packages.cf services/autorun/upgrade_all_packages.cf"
       ]
+    },
+    {
+      "name": "library-for-promise-types-in-python",
+      "description": "Library enabling promise types implemented in python.",
+      "tags": ["supported", "library"],
+      "repo": "https://github.com/cfengine/modules",
+      "by": "https://github.com/cfengine",
+      "version": "0.2.3",
+      "commit": "2be0eee0788e2e562e43f0254c702f85b368c051",
+      "subdirectory": "libraries/python",
+      "added_by": "promise-type-git",
+      "steps": ["copy cfengine.py modules/promises/"]
+    },
+    {
+      "name": "promise-type-git",
+      "description": "Promise type to manage git repos.",
+      "tags": ["supported", "promise-type"],
+      "repo": "https://github.com/cfengine/modules",
+      "by": "https://github.com/tranchitella",
+      "version": "0.2.6",
+      "commit": "3055538003b5dc88c80547703368da33fd43a5a9",
+      "subdirectory": "promise-types/git",
+      "dependencies": ["library-for-promise-types-in-python"],
+      "added_by": "cfbs add",
+      "steps": [
+        "copy git.py modules/promises/",
+        "append enable.cf services/init.cf"
+      ]
     }
   ]
 }
