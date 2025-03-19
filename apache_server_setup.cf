@@ -4,6 +4,8 @@ bundle agent apache_server_setup
     data:apache_server::
       "apache_server_dependencies"
         comment => "Install Apache 2 dependencies";
+      "apache_server_fetch_sources"
+        comment => "Fetch website sources from hub";
       "apache_server_render_sources"
         comment => "Render website sources into /var/www/html/";
       "apache_server_perms"
@@ -20,7 +22,7 @@ bundle agent apache_server_dependencies
        comment => "Install Apache 2 from apt repository";
 }
 
-bundle agent apache_server_render_sources
+bundle agent apache_server_fetch_sources
 {
   vars:
     "source_dir"
@@ -32,8 +34,17 @@ bundle agent apache_server_render_sources
     "$(source_dir)/."
       copy_from => remote_dcp("$(sys.masterdir)/templates/www/", "$(sys.policy_hub)"),
       depth_search => recurse("inf");
+}
 
+bundle agent apache_server_render_sources
+{
+  vars:
+    "source_dir"
+      string => "$(sys.inputdir)/templates/www";
+    "source_files"
+      slist => findfiles("$(source_dir)/**/*.{html,css}");
 
+  files:
     "/var/www/$(with)"
       template_method => "cfengine",
       edit_template => "$(source_files)",
